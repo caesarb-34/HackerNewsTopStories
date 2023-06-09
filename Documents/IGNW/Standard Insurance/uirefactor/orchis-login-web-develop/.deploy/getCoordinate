@@ -1,0 +1,36 @@
+#!/bin/bash -e
+# Output is expected to be one released artifact per line on stdout
+# url is the https location of Nexus | The maven coordinates of what our source code is set to build
+# In this example we are only building and deploying a single artifact so the output is a simple echo
+
+if [[ -z "$BASH_VERSION" ]]; then
+    echo "This script must be run or sourced using the BASH shell" 1>&2
+    exit 1
+fi
+
+# Calculate path to project and setup work directories relative to this script
+project="$(cd "$(dirname "$BASH_SCRIPT[0]")" && pwd)"
+if [[ "$(basename "$project")" == ".deploy" ]]; then
+    project="$(dirname "$project")"
+fi
+
+if [[ -e "$project/package.json" ]]; then
+    # Extract the required parameters
+    distributionUrl="https://nexus.standard.com:8443/nexus/repository/releases"
+    groupId="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['groupId'])")"
+    artifactId="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['artifactId'])")"
+    version="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['version'])")"
+
+    # Validate that the required variables have been read from the project and set
+    if [[ -z "$distributionUrl" || -z "$groupId" || -z "$artifactId" || -z "$version" ]]; then
+        echo "Some of the required variables were not available from the project" 1>&2
+        echo "    distributionUrl: $distributionUrl" 1>&2
+        echo "    groupId: $groupId" 1>&2
+        echo "    applicationName $applicationName" 1>&2
+        echo "    version: $version" 1>&2
+        exit 1
+    fi
+
+    # Publish the coordinate of the artifact we are going to build
+    echo "${distributionUrl}|${groupId}:${artifactId}:${version}"
+fi

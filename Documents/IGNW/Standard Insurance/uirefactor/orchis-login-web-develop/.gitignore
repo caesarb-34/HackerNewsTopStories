@@ -1,0 +1,68 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+.repository
+tmpdist
+
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+
+####### common ignores below #######
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Eclipse/RAD
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.metadata/
+classes/
+
+# JetBrains IntellijIDEA/WebStorm
+.idea/
+*.iml
+*.iws
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Numerous always-ignore extensions
+*.diff
+*.bak
+*.tmp
+*.moved
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.zip
+*.vi
+*~
+.tags
+tags

@@ -1,0 +1,20 @@
+<div class="lgn-step-container" *ngIf="steps && steps.length > 0">
+  <ul class="lgn-list-inline">
+    <ng-container *ngFor="let item of steps">
+      <li class="lgn-line"
+        [ngClass]="{'lgn-inactive-line': (item.index > selectedStep)}"
+        [ngStyle]="{'width': (100/(steps.length*2)) + '%'}">&nbsp;</li>
+      <li class="lgn-step" [ngStyle]="{'width': (100/(steps.length*2)) + '%'}">
+          <div class="lgn-step-index"
+          [ngClass]="{
+            'lgn-inactive': item.index > selectedStep,
+            'lgn-step-done': item.index < selectedStep
+          }">
+          <span *ngIf="item.index < selectedStep" class="fa fa-check" aria-hidden="true"></span>
+          {{ item.index >= selectedStep ? item.index : '' }}
+        </div>
+        <div class="lgn-step-label">{{ item.index > selectedStep ? item.label : '' }}</div>
+      </li>
+    </ng-container>
+  </ul>
+</div>

@@ -1,0 +1,23 @@
+<ng-container *ngIf="isMsgInfo || isMsgWarning || isMsgError || isMsgTotalOutage || isMsgClear">
+  <div class="lgn-center-col lgn-msg-popup col-12 fade-in d-flex"
+      [ngClass]="{
+        'lgn-msg-popup-info':    isMsgInfo,
+        'lgn-msg-popup-warning': isMsgWarning,
+        'lgn-msg-popup-error':   isMsgError || isMsgTotalOutage,
+        'lgn-msg-popup-clear col-lg-6 col-md-6 col-sm-9':   isMsgClear,
+        'col-lg-8 col-md-8 col-sm-11': usageType !== 'modal'
+      }">
+      <div class="lgn-msg-container">
+        <div *ngIf="!isMsgClear" class="col px-0 d-none d-sm-flex flex-grow-0 lgn-msg-icon-container">
+          <span class="lgn-msg-icon"
+                [ngClass]="{
+                  'fas fa-exclamation-triangle': isMsgTotalOutage || isMsgError || isMsgWarning,
+                  'fa fa-check': isMsgInfo
+                }"></span>
+        </div>
+        <div [ngClass]="{ 'col pr-0 pl-0 pl-sm-3 lgn-msg-body': !isMsgClear }"
+             [innerHtml]="message">
+        </div>
+      </div>
+  </div>
+</ng-container>

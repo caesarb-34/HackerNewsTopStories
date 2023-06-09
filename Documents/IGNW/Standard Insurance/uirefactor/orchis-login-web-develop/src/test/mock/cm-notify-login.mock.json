@@ -1,0 +1,9 @@
+[
+  {
+    "targetId": "login-message",
+    "targetType": "none",
+    "notificationType": "clear",
+    "messageTitle": "Example Message",
+    "message": "<p>This is another friendly example message that could theoretically come from Drupal.</p><p>Are you on pace to retire comfortably? Calculate how much you might need to contribute to your retirement account.</p>"
+  }
+]

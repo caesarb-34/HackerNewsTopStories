@@ -1,0 +1,99 @@
+#!/bin/bash -e
+brepackage() {
+branchName="$1" # xlDeployJenkinsRepository or xlDeployMavenRepository have special meaning
+
+if [[ -z "$BASH_VERSION" ]]; then
+    echo "This script must be run or sourced using the BASH shell" 1>&2
+    exit 1
+fi
+
+# Calculate path to project and setup work directories relative to this script
+project="$(cd "$(dirname "$BASH_SCRIPT[0]")" && pwd)"
+if [[ "$(basename "$project")" == ".deploy" ]]; then
+    project="$(dirname "$project")"
+fi
+setup="$project/.deploy"
+
+# Validate that we have built the package to be deployed
+if [[ ! -e "$project/dist" ]]; then
+  echo "The $project/dist directory must exist to create a DAR package" 1>&2
+  exit 1
+fi
+
+# Variables for deployment
+distributionUrlSnapshots="https://nexus.standard.com:8443/nexus/repository/snapshots"
+distributionUrlReleases="https://nexus.standard.com:8443/nexus/repository/releases"
+groupId="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['groupId'])")"
+applicationName="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['artifactId'])")"
+buildVersion="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['version'])")"
+timestamp="$(date +%Y%m%d_%H%M%S)"
+applicationVersion="$(printf %s "$buildVersion" | sed -e "s/-SNAPSHOT/-$timestamp/")"
+
+# Validate that the required variables have been read from the project and set
+if [[ -z "$groupId" || -z "$applicationName" || -z "$buildVersion" ]]; then
+  echo "Some of the required variables were not available from the project" 1>&2
+  echo "    groupId: $groupId" 1>&2
+  echo "    applicationName $applicationName" 1>&2
+  echo "    buildVersion: $buildVersion" 1>&2
+  exit 1
+fi
+
+# Create the manifest file
+rm -rf "$setup/target"
+mkdir -p "$setup/target/deployit-working-dir"
+if [[ "$branchName" =~ $REGEX_DEVELOP ]]; then
+    file="<file.Folder name=\"${applicationName}\">"
+    fileUri="<fileUri>${BUILD_URL}artifact/.deploy/target/xlDeployJenkinsRepository/${applicationName}-${buildVersion}.zip</fileUri>"
+elif [[ "$branchName" =~ $REGEX_RELEASE || "$branchName" =~ $REGEX_HOTFIX ]]; then
+    file="<file.Folder name=\"${applicationName}\">"
+    fileUri="<fileUri>maven:${groupId}:${applicationName}:zip:${buildVersion}</fileUri>"
+else
+    file="<file.Folder file=\"${applicationName}/${applicationName}-${buildVersion}.zip\" name=\"${applicationName}\">"
+    fileuRI=""
+fi
+read -d '' deployitManifest << EOF || true
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<udm.DeploymentPackage version=\"${applicationVersion}\" application=\"${applicationName}\">
+<deployables>
+  $file
+    $fileUri
+    <targetPathShared>false</targetPathShared>
+    <scanPlaceholders>true</scanPlaceholders>
+    <targetPath>/opt/apps/webapps/angular-apps/${applicationName}</targetPath>
+    <createTargetPath>true</createTargetPath>
+    <tags>
+      <value>angular1</value>
+    </tags>
+    <delimiters>!{ }!</delimiters>
+    <excludeFileNamesRegex></excludeFileNamesRegex>
+    <textFileNamesRegex>.+\\\\.(css | html | js | json | properties | yml | yaml)</textFileNamesRegex>
+    <fileEncodings>
+      <entry key=".+\\\\.(css | html | js | json | yml | yaml)">UTF-8</entry>
+      <entry key=".+\\\\.(properties)">ISO-8859-1</entry>
+    </fileEncodings>
+  </file.Folder>
+</deployables>
+</udm.DeploymentPackage>
+EOF
+echo "$deployitManifest" >> "$setup/target/deployit-working-dir/deployit-manifest.xml"
+
+# Make the dist package .zip
+if [[ "$branchName" =~ $REGEX_DEVELOP ]]; then
+    mkdir -p "$setup/target/xlDeployJenkinsRepository"
+    (cd "$project/dist"; zip -r "${setup}/target/xlDeployJenkinsRepository/${applicationName}-${buildVersion}.zip" . 1>&2)
+    echo "${distributionUrlSnapshots}|${groupId}:${applicationName}:zip:${buildVersion}|${setup}/target/xlDeployJenkinsRepository/${applicationName}-${buildVersion}.zip"
+elif [[ "$branchName" =~ $REGEX_RELEASE || "$branchName" =~ $REGEX_HOTFIX ]]; then
+    (cd "$project/dist"; zip -r "${setup}/target/${applicationName}-${buildVersion}.zip" . 1>&2)
+    # Request that Jenkins deploy the application for us
+    echo "${distributionUrlReleases}|${groupId}:${applicationName}:zip:${buildVersion}|${setup}/target/${applicationName}-${buildVersion}.zip"
+else
+    mkdir -p "$setup/target/deployit-working-dir/${applicationName}"
+    (cd "$project/dist"; zip -r "$setup/target/deployit-working-dir/${applicationName}/${applicationName}-${buildVersion}.zip" . 1>&2)
+fi
+
+# Skip: make the xl-deploy .dar
+#(cd "$setup/target/deployit-working-dir" ;zip -r "$setup/target/${applicationName}-${buildVersion}.dar" . 1>&2)
+
+}
+brepackage "$@"
+unset -f breinstall

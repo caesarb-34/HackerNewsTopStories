@@ -1,0 +1,291 @@
+<div *ngIf="isLoading; then loadingProgressBlock else loginBlock"></div>
+<ng-template #loadingProgressBlock>
+  <lgn-logo-spinner></lgn-logo-spinner>
+</ng-template>
+
+<ng-template #loginBlock>
+  <lgn-message-popup
+    *ngIf="isTotalOutage && outageContent"
+    [message]="outageContent.message"
+    [msgType]="outageContent.notificationType">
+  </lgn-message-popup>
+
+  <ng-container *ngIf="!isTotalOutage">
+    <lgn-message-popup
+      *ngIf="authenticationService.errorStatusCode"
+      [message]="errorMessages[authenticationService.errorStatusCode]"
+      [msgType]="'error'">
+    </lgn-message-popup>
+	
+	  <lgn-message-popup
+      *ngIf="sessionValid"
+      [message]="sessionExpiredMsg"
+      [msgType]="'error'">
+    </lgn-message-popup>
+
+    <lgn-message-popup
+      *ngIf="isInactive"
+      [message]="errorMessages['needsToActivate']"
+      [msgType]="'error'">
+    </lgn-message-popup>
+
+    <lgn-message-popup
+      *ngIf="passwordReset && !(authenticationService.errorStatusCode || sessionValid || isInactive)"
+      [message]="'Your password has been changed. You may now log into your account.'"
+      [msgType]="'info'">
+    </lgn-message-popup>
+
+    <lgn-message-popup
+      *ngIf="accountActivated && !(authenticationService.errorStatusCode || sessionValid || isInactive)"
+      [message]="'Thank you. Your account has been activated. Log in to complete your account setup.'"
+      [msgType]="'info'">
+    </lgn-message-popup>
+
+    <lgn-message-popup
+      *ngIf="loggedout && !(authenticationService.errorStatusCode || sessionValid || isInactive)"
+      [message]="'You are now logged out of standard.com.'"
+      [msgType]="'info'">
+    </lgn-message-popup>
+
+    <lgn-message-popup
+      *ngIf="passwordResetLogout && !(authenticationService.errorStatusCode || sessionValid || isInactive)"
+      [message]="'Thank you. Your password was changed. Please log in now to access your account.'"
+      [msgType]="'info'">
+    </lgn-message-popup>
+
+    <lgn-message-popup
+      *ngIf="userSelfRegistrationCompleted && !(authenticationService.errorStatusCode || sessionValid || isInactive)"
+      [message]="'Thank you. Your account has been activated. Log in now to finalize your setup.'"
+      [msgType]="'info'">
+    </lgn-message-popup>
+
+    <lgn-message-popup
+      *ngIf="notificationContent && !(authenticationService.errorStatusCode || sessionValid || isInactive || loggedout) "
+      [message]="notificationContent.message"
+      [msgType]="notificationContent.notificationType">
+    </lgn-message-popup>
+  </ng-container>
+
+
+  <lgn-resend-activation *ngIf="activationExpired && userActivationCode"
+                         [code]="userActivationCode"></lgn-resend-activation>
+
+  <div class="lgn-center-col col-12 col-sm-9 col-md-6">
+    <h1>Log In</h1>
+    <ng-container *ngIf="!isTotalOutage">
+
+      <div id="loginFormContainer" class="pt-3">
+
+        <div *ngIf="manageContentState === REQUEST_STATE.SUCCESS && openingCmContent"
+             [innerHTML]="openingCmContent?.body"
+             [attr.data-cm-id]="CM_OPENING_CONTENT_ID"></div>
+
+        <p class="lgn-welcome-message" *ngIf="userRegistrationLinkReady">
+          New here? <a class="lgn-link-primary" (click)="goToUserRegistration()" tabindex="0">Create an account</a> to connect to services.
+        </p>
+
+        <form (ngSubmit)="login()" #loginForm="ngForm" (keyup.enter)="pressEnterCallLogin()">
+          <div class="form-group">
+            <div *ngIf="focusUsername" class="help-message">
+              &#xf007; User Name
+            </div>
+            <div *ngIf="notEnteredUsername" class="error-message">
+              User Name is required.
+            </div>
+            <label style="display:none" for="lgn-username-input">
+              Username Input
+            </label>
+            <input
+              name="username"
+              [ngClass]="{'form-error': notEnteredUsername, 'form-focus': focusUsername}"
+              class="form-control lgn-username"
+              (blur)="focusUsername = false"
+              (focus)="notEnteredUsername = false; focusUsername = true;"
+              [(ngModel)]="userName"
+              id="lgn-username-input"
+              type="text"
+              placeholder="&#xf007;  User Name"
+              tabindex="0"
+              title="User Name"
+              autocomplete="username"
+            />
+            <div *ngIf="focusPassword" class="help-message">
+              &#xf023; Password
+            </div>
+            <div *ngIf="notEnteredPassword" class="error-message">
+              Password is required.
+            </div>
+            <label style="display:none" for="lgn-password-input">
+              Password Input
+            </label>
+            <lgn-capslock-tooltip></lgn-capslock-tooltip>
+            <input
+              name="password"
+              [ngClass]="{'form-error': notEnteredPassword, 'form-focus': focusPassword}"
+              class="form-control lgn-password"
+              (blur)="focusPassword = false"
+              (focus)="notEnteredPassword = false; focusPassword = true;"
+              [(ngModel)]="userPw"
+              id="lgn-password-input"
+              type="password"
+              placeholder="&#xf023;  Password"
+              tabindex="0"
+              title="Password"
+              autocomplete="current-password"
+            />
+          </div>
+          <button type="button" (click)="showPassword()"
+              (keydown.enter)="showPasswordKeyPress()" (keydown.space)="showPasswordKeyPress()"
+              class="lgn-show-password"
+              tabindex="0">
+            <span class="fa" [ngClass]="{ 'fa-eye': !isShowPassword, 'fa-eye-slash': isShowPassword }"></span>
+            {{ isShowPassword ? 'Hide' : 'Show'}}
+          </button>
+          <button type="submit"
+                  id="login-button"
+                  [ngClass]="{'disabled': submitDisabled}"
+                  class="lgn-login-btn btn btn-lg btn-primary toggleButton"
+                  tabindex="0" >
+                    <span *ngIf="submitDisabled">
+                      <span class="fas fa-spinner fa-pulse fa-fw"></span>
+                    </span>
+                    <span *ngIf="!submitDisabled">LOG IN</span>
+            </button>
+        </form>
+        <div class="lgn-cancel-container">
+          <a id="btnCancel"
+             class="lgn-cancel"
+             [href]="cancelButtonUrl"
+             tabindex="0"
+          >Cancel</a>
+        </div>
+
+        <div class="text-center lgn-forgot-options">
+          <a routerLink="/forgot-username" class="lgn-btn-forgot-user lgn-btn-underline" tabindex="0">Forgot user name?</a>
+          <span class="divider">|</span>
+          <a routerLink="/forgot-password" class="lgn-btn-forgot-password lgn-btn-underline" tabindex="0">Forgot password?</a>
+        </div>
+
+        <div *ngIf="manageContentState === REQUEST_STATE.SUCCESS && closingCmContent"
+             [innerHTML]="closingCmContent?.body"
+             [attr.data-cm-id]="CM_CLOSING_CONTENT_ID"></div>
+      </div><!-- loginFormContainer-->
+
+    </ng-container>
+  </div>
+</ng-template>
+
+<div [config]="{ show: false, ignoreBackdropClick: true }"
+     bsModal
+     #termsAndConsentNavModal="bs-modal" class="modal fade"
+     tabindex="-1" role="dialog"
+     aria-label= "terms-consent-modal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg lgn-modal-lg">
+    <div *ngIf="!modalContent && !termsAndConsentError" class="loading-container">
+      <div class="loading-area">
+        <div class="progress">
+          <div class="indeterminate"></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="modalContent" class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">{{ modalContent?.title }}</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="termsAndConsentNavModal.hide(); submitDisabled = !submitDisabled">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div *ngIf="!modalContent.title" class="modal-body">
+        <div class="lgn-spinner-container">
+          <div class="lgn-valign-middle">
+            <span class="fas fa-spinner fa-pulse fa-5x fa-fw"></span>
+            <span class="sr-only" >Loading...</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="modalContent.title" class="modal-body" [innerHtml]="modalContent?.body"></div>
+      <div class="modal-footer">
+        <div class="lgn-error-message">{{errorMessageTermsAndConsent}}</div>
+        <div class="checkbox checkbox-primary">
+          <input [(ngModel)]="agreeToTerms" id="terms-checkbox" type="checkbox" aria-label="Read and agree to the terms and consent" >
+          <label for="terms-checkbox">I have read and agree to the Terms and Consent</label>
+        </div>
+        <button type="button"
+                class="lgn-close-btn btn btn-lg btn-primary"
+                tabindex="0"
+                data-dismiss="modal"
+                (click)="setEulaAndNavigate()">CONTINUE
+        </button>
+      </div>
+    </div>
+    <div *ngIf="termsAndConsentError" class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title pull-left">Terms and Consent</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="termsAndConsentNavModal.hide(); submitDisabled = !submitDisabled">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This content is not currently available. Please close this window and try again later.
+        If you continue to experience this problem, please <a [href]="customerSupportUrl">contact us</a> for help.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [config]="{ show: false }" bsModal
+     #identityProtectionNavModal="bs-modal" class="modal fade"
+     tabindex="-1" role="dialog"
+     aria-label= "identity-protection-modal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg lgn-modal-lg">
+    <div *ngIf="!modalContent && !protectYourIdentityError" class="loading-container">
+      <div class="loading-area">
+        <div class="progress">
+          <div class="indeterminate"></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="modalContent && !protectYourIdentityError" class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">{{ modalContent?.title }}</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="identityProtectionNavModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div *ngIf="!modalContent.title" class="modal-body">
+        <div class="lgn-spinner-container">
+          <div class="lgn-valign-middle">
+            <span class="fas fa-spinner fa-pulse fa-5x fa-fw"></span>
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="modalContent.title" class="modal-body" [innerHtml]="modalContent?.body"></div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" tabindex="0"
+                data-dismiss="modal" (click)="identityProtectionNavModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+    <div *ngIf="protectYourIdentityError" class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title pull-left">Protect Your Identity</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="identityProtectionNavModal.hide(); submitDisabled = !submitDisabled">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" [innerHtml]="errorMessages['408']"></div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" tabindex="0"
+                data-dismiss="modal" (click)="identityProtectionNavModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

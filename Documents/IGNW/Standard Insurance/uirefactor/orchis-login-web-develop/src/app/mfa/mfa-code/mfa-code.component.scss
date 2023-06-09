@@ -1,0 +1,33 @@
+form {
+  margin-top: 1.5em;
+}
+
+.lgn-continue-btn {
+  width: 100%;
+  margin: 1.5em 0;
+}
+
+.lgn-error-message {
+  color: #e31937;
+}
+
+.lgn-modal-sm {
+  padding: 0;
+  width: 420px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.lgn-modal-sm .modal-body {
+  padding: 10px 60px;
+}
+
+.lgn-mouse-pointer {
+  cursor: pointer;
+}
+
+@media(max-width:767px){
+  .lgn-modal-sm {
+    width: 100%;
+  }
+}

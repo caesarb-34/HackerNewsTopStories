@@ -1,0 +1,55 @@
+#!/usr/bin/env groovy
+@Library('GlobalPipelineLibrary')
+@Library('PipelineLibrary') _
+brePipeline {
+    label = 'linux&&x64'
+    automerge = 'false'
+    xlReleaseTechnology = 'Angular'
+    devSonaTypeEvalRequired = 'true'
+    regexDevelop = '^(develop|Sonatypefix*)$'
+    getCoordinate = '.deploy/getCoordinate'
+    setCoordinate = '.deploy/setCoordinate "$COORDINATE"'
+    artifact2Scan='com.standard.sic:orchis-login-web::zip'
+    MSTeamsWebhookURL = 'https://outlook.office.com/webhook/8f02f2c5-8153-484b-9994-b993d6f6c777@9efd56dd-e9db-43bf-8447-60d4413b594a/JenkinsCI/e2492d64a5b44cd787fc5ccb944e1d5d/a6eacade-f44a-4fe4-96ee-4dbc154803c2' 
+    build = '''\
+        # Set environment to run node inside the SIC firewall using the nexus.standard.com for repos
+        unset -v HTTP_PROXY HTTPS_PROXY FTP_PROXY NO_PROXY http_proxy https_proxy ftp_proxy no_proxy
+        export npm_config_cafile="$(pwd)/.deploy/cacerts"
+        export npm_config_globalconfig=/dev/null
+        export npm_config_userconfig=/dev/null
+        export npm_config_disturl=https://nexus.standard.com:8443/nexus/repository/nodejs/dist
+        export npm_config_registry=https://nexus.standard.com:8443/nexus/repository/npm-all
+        export SASS_BINARY_SITE=https://nexus.standard.com:8443/nexus/repository/github/sass/node-sass/releases/download
+
+        # Install the version of node / npm defined in package.json and place in current shells path
+        # Note: installs in $JENKINS_HOME/tools/bre/angular tools area on Jenkins server or in the directory
+        # where the install script is located otherwise. Exports to bash both PATH and npm_config_cache variables
+        source .deploy/node-install
+
+        npm install
+        npm run lint
+        # npm run test-coverage # This is temporarily disabled due to the build pipeline not supporting CHROME in RHEL environment
+
+        name="$(cat package.json | python -c "import sys, json; print(json.load(sys.stdin)['name'])")"
+        version="$(cat package.json | python -c "import sys, json; print(json.load(sys.stdin)['version'])")"
+        rm -rf tmpdist
+        mkdir tmpdist
+        ts-node node_modules/sfg-ng-brand-library/scripts/build-timestamp.ts
+        npm run clean
+        ng build --prod --configuration production-int --base-href "/"
+        mv dist "tmpdist/$name-INT"
+        npm run clean
+        ng build --prod --configuration production-sys --base-href "/"
+        mv dist "tmpdist/$name-SYS"
+        npm run clean
+        ng build --prod --configuration production-acc --base-href "/"
+        mv dist "tmpdist/$name-ACC"
+        npm run clean
+        ng build --prod --base-href "/"
+        mv dist "tmpdist/$name-PROD"
+        mv tmpdist dist
+    '''
+    // Build the dist deployable archive, xl-deploy deployit-manifest.xml and DAR file
+    packageScript = '.deploy/package "$BRANCH_NAME"' // The branch value will be set by Jenkins
+    //publish = '.deploy/publish "$BRANCH_NAME"'
+}

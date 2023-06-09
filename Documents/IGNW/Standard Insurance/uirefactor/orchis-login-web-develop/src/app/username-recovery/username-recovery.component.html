@@ -1,0 +1,77 @@
+<div class="lgn-center-col col-12 col-sm-11 col-md-9 col-lg-9">
+  <lgn-message-popup
+                     [message]="errorMessages[activeError]"
+                     [msgType]="'error'"
+                     *ngIf="hasActiveError"
+  >
+  </lgn-message-popup>
+</div>
+<div class="lgn-center-col col-12 col-sm-10 col-md-6">
+  <div role="complementary" aria-label="Primary">
+
+    <h1>Recover User Name</h1>
+    <p class="lgn-intro-message" [innerHtml]="introParagraph"></p>
+  </div>
+
+  <form #forgotUserNameForm="ngForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+
+      <label *ngIf="focusEmail || emailAddress.valid"
+             id="emailAddressLabel"
+             class="help-message"
+             for="emailAddress">&#xf0e0; Email Address
+      </label>
+
+      <div *ngIf="forgotUserNameForm.submitted && !focusEmail && emailAddress.errors" class="error-message">
+        <span *ngIf="emailAddress.hasError('required')">
+          Email Address is required.
+        </span>
+        <span *ngIf="!emailAddress.hasError('required') && emailAddress.hasError('validEmailRequired')">
+          Please enter a valid email address.
+        </span>
+        <span *ngIf="emailAddress.errors?.pattern">
+          Please enter a valid email address.
+        </span>
+      </div>
+
+      <input id="emailAddress"
+             name="emailAddress"
+             type="email"
+             class="form-control"
+             #emailAddress="ngModel"
+             [(ngModel)]="userEmail"
+             [ngClass]="{
+              'form-focus': focusEmail,
+              'form-error': (forgotUserNameForm.submitted && !focusEmail && emailAddress.invalid)
+            }"
+             (blur)="focusEmail = false"
+             (focus)="focusEmail = true;"
+             placeholder="&#xf0e0;  Email Address"
+             required
+             aria-label="email address"
+             autocomplete="email"
+             lgnValidateEmail
+             [pattern]="EMAIL_VALIDATION_PATTERN"/>
+    </div>
+    <button type="submit"
+            id="btnSubmit"
+            label="Continue"
+            class="lgn-continue-btn btn btn-lg btn-primary"
+            aria-label="continue button">CONTINUE</button>
+    <div class="lgn-cancel-container">
+      <a id="btnCancel"
+         label="Cancel"
+         class="lgn-cancel"
+         routerLink="/login"
+         aria-label="cancel">Cancel</a>
+    </div>
+  </form>
+  <div class="lgn-forgot-options" role="complementary" aria-label="Secondary">
+    <a id="forgotUserName"
+       tabindex="0"
+       routerLink="/forgot-password"
+       aria-label="forgot password"
+       class="lgn-forgot-user lgn-btn-underline"
+    >Forgot password?</a>
+  </div>
+</div>

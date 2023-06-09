@@ -1,0 +1,56 @@
+<div *ngIf="!showLink" class="lgn-center-col lgn-msg-popup  col-12 col-sm-11 col-md-8 lgn-msg-popup-error fade-in">
+  <div class="lgn-msg-container">
+    <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs lgn-msg-icon-container">
+        <span class="fa lgn-msg-icon fa-warning"></span>
+    </div>
+    <div class="col-12 col-sm-11 lgn-msg-body">
+      <p>Your activation link has expired. You can
+        <a (click)="resendActivationEmail()">request a new link</a> or
+        <a [href]="customerSupportUrl">contact us</a> for assistance.
+      </p>
+    </div>
+  </div>
+</div>
+<a *ngIf="showLink" (click)="resendActivationEmail()" (keypress)="pressEnterCallRequestNewLink($event)">{{linkLabel}}</a>
+
+<div [config]="{ show: false }" bsModal
+     #resendActivationModal="bs-modal" class="modal fade"
+     tabindex="-1" role="dialog"
+     [attr.aria-label]='"cancel"'
+     aria-label="resendActivationModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog lgn-modal-sm">
+    <div class="modal-content lgn-position-relative">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="resendActivationModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="lgn-request-status-container">
+          <div class="lgn-status-icon">
+            <span class="fa fa-fw" [ngClass]="{
+              'fa-spinner fa-pulse fade-in': !responseReturned,
+              'fa-warning lgn-red fade-in': (responseReturned && resendActivationError),
+              'fa-check lgn-green fade-in': (responseReturned && !resendActivationError)
+            }"></span>
+          </div>
+          <div class="lgn-status-message" >
+            <p *ngIf="!responseReturned" [ngClass]="{'fade-in': !responseReturned}">Sending Activation Email.</p>
+            <p *ngIf="responseReturned && resendActivationError"
+               [ngClass]="{'fade-in': responseReturned && resendActivationError}"
+               [innerHtml]="errorMessages['422']"></p>
+            <p *ngIf="responseReturned && !resendActivationError"
+               [ngClass]="{'fade-in': responseReturned && !resendActivationError}">We sent you a new activation link. Use the link in that email within 24 hours, before it expires.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" tabindex="0"
+                data-dismiss="modal" (click)="resendActivationModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

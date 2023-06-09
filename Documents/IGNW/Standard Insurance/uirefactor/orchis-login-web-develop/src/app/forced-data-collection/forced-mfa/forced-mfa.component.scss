@@ -1,0 +1,59 @@
+.lgn-button-container {
+  width: 100%;
+  text-align: center;
+  margin-top: 25px;
+}
+
+.lgn-continue-btn {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: 100%;
+  font-size: 16px;
+}
+
+form div div label,
+form div div span,
+form div div label span {
+  font-size: 16px;
+}
+
+.error-message {
+  color: #e31937;
+}
+
+.lgn-bold {
+  font-weight: bold;
+}
+
+.lgn-mfa-italic {
+  font-style: italic;
+}
+
+.lgn-mfa-opacity {
+  opacity: 0.75;
+}
+
+@media screen and (min-width: 768px ) {
+  .lgn-mfainfo-content {
+    height: 350px;
+  }
+
+  .lgn-mfainfo-content:nth-child(even) img {
+    vertical-align: middle;
+  }
+
+  .lgn-mfainfo-content .img-responsive {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .lgn-mfainfo-content h2 {
+    color: #EC5032;
+    font-size: 18px;
+  }
+
+  .lgn-mfainfo-content p {
+    font-size: 16px;
+  }
+
+}

@@ -1,0 +1,240 @@
+<div role="group" aria-label="create account">
+  <div class="lgn-intro-message">Tell us who you are.</div>
+  <form #createAccountForm="ngForm" (ngSubmit)="onSubmit()">
+    <div class="form-group lgn-input-row" role="rowgroup">
+      <label *ngIf="(focusFirstName && firstName.untouched) || firstName.valid"
+             id="firstNameLabel"
+             class="help-message"
+             for="firstName">
+        &#xf2b9; First Name
+      </label>
+
+      <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
+        <span *ngIf="firstName.hasError('required')">
+          First Name is required.
+        </span>
+      </div>
+
+      <input
+        id="firstName"
+        name="firstName"
+        type="text"
+        maxlength="20"
+        #firstName="ngModel"
+        [(ngModel)]="userViewModel.firstName"
+        [ngClass]="{'form-focus': focusFirstName,
+                    'form-error': firstName.touched && firstName.invalid}"
+        class="form-control"
+        (blur)="focusFirstName = false"
+        (focus)="focusFirstName = true;"
+        placeholder="{{firstName.untouched ? '&#xf2b9;  First Name' : '' }}"
+        aria-labelledby="firstNameLabel"
+        autocomplete="given-name"
+        required
+      />
+    </div>
+
+    <div class="form-group lgn-input-row" role="rowgroup">
+      <label *ngIf="(focusLastName && lastName.untouched) || lastName.valid"
+             id="lastNameLabel"
+             class="help-message"
+             for="lastName">
+        &#xf2b9; Last Name
+      </label>
+
+      <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
+        <span *ngIf="lastName.hasError('required')">
+         Last Name is required.
+        </span>
+      </div>
+
+      <input
+        id="lastName"
+        name="lastName"
+        type="text"
+        maxlength="20"
+        #lastName="ngModel"
+        [(ngModel)]="userViewModel.lastName"
+        [ngClass]="{'form-focus': focusLastName, 'form-error': (lastName.touched && lastName.invalid)}"
+        class="form-control"
+        (blur)="focusLastName = false"
+        (focus)="focusLastName = true;"
+        placeholder="{{lastName.untouched ? '&#xf2b9; Last Name' : '' }}"
+        aria-labelledby="lastNameLabel"
+        autocomplete="family-name"
+        required
+      />
+    </div>
+
+    <!-- EMAIL INPUT -->
+    <div class="input-group lgn-input-row" role="rowgroup">
+      <label *ngIf="(focusEmail && email.untouched) || email.valid"
+             id="emailLabel"
+             class="help-message"
+             for="email">
+        &#xf0e0; Email Address
+      </label>
+
+      <div *ngIf="email.touched && email.invalid" class="error-message">
+        <span *ngIf="email.hasError('required')">
+          Email Address is required.
+        </span>
+        <span *ngIf="email.errors?.pattern">
+          Please enter a valid email address.
+        </span>
+      </div>
+
+      <input
+        id="email"
+        name="email"
+        type="email"
+        #email="ngModel"
+        [(ngModel)]="userViewModel.email"
+        [ngClass]="{'form-focus': focusEmail, 'form-error': (email.touched && email.invalid)}"
+        class="form-control"
+        (blur)="focusEmail = false"
+        (focus)="focusEmail = true"
+        placeholder="{{email.untouched ? '&#xf0e0;  Email Address' : '' }}"
+        aria-labelledby="emailLabel"
+        autocomplete="email"
+        required
+        [pattern]="EMAIL_VALIDATION_PATTERN"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-link lgn-btn-append"
+                type="button"
+                aria-label="More information"
+                (click)="helpIndicatorClick('email')"
+                tabindex="0">
+          <span class="fas fa-info-circle lgn-help-indicator"></span>
+        </button>
+      </div>
+    </div>
+    <!-- /EMAIL INPUT -->
+
+    <!-- PHONE INPUT -->
+    <div class="input-group lgn-input-row" role="rowgroup">
+      <label *ngIf="(focusPhone && phone.untouched) || phone.valid"
+             id="phoneLabel"
+             class="help-message"
+             for="phone">
+        &#xf095; Phone
+      </label>
+
+      <div *ngIf="phone.touched && phone.invalid" class="error-message">
+        <span *ngIf="phone.hasError('required')">
+          Phone is required.
+        </span>
+        <span *ngIf="!phone.hasError('required') && phone.hasError('pattern')">
+          Please enter a valid phone number.
+        </span>
+      </div>
+
+      <input
+        id="phone"
+        name="phone"
+        type="tel"
+        #phone="ngModel"
+        [(ngModel)]="userViewModel.mobile"
+        [ngClass]="{'form-focus': focusPhone, 'form-error': (phone.touched && phone.invalid)}"
+        class="form-control"
+        (blur)="focusPhone = false"
+        (focus)="focusPhone = true;"
+        placeholder="{{phone.untouched ? '&#xf095;  Phone' : '' }}"
+        aria-labelledby="phoneLabel"
+        autocomplete="tel"
+        pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
+        [textMask]="{'mask': PHONE_MASK, 'guide': false}"
+        required
+       />
+
+      <div class="input-group-append">
+        <button class="btn btn-link lgn-btn-append"
+                type="button"
+                aria-label="More information" (click)="helpIndicatorClick('phone')"
+                tabindex="0">
+          <span class="fas fa-info-circle lgn-help-indicator"></span>
+        </button>
+      </div>
+    </div>
+    <!-- /PHONE INPUT -->
+
+    <div class="row mx-0">
+      <div class="col-12 col-sm-6 pr-0 lgn-radio-group-label">
+        <label id="lblIsMobile"
+               for="isMobileGroup"
+               class="lgn-radio-group-label">
+          Is this a mobile phone?
+        </label>
+      </div>
+      <div class="col-12 col-sm-6">
+        <div id="isMobileGroup" class="lgn-standard-blue-radio" role="radiogroup" tabindex="-1" aria-labelledby="lblIsMobile">
+            <input type="radio"
+                   name="isMobile"
+                   [(ngModel)]="userViewModel.isMobile"
+                   [value]="true"
+                   tabindex="0"
+                   id="isMobileTrue"
+                   aria-checked="true"
+                   aria-describedby="lblIsMobile"
+                   aria-label="yes"
+                   #isMobileTrue="ngModel"><label for="isMobileTrue">Yes</label>
+            <input type="radio"
+                   name="isMobile"
+                   [(ngModel)]="userViewModel.isMobile"
+                   [value]="false"
+                   tabindex="-1"
+                   id="isMobileFalse"
+                   aria-checked="false"
+                   aria-describedby="lblIsMobile"
+                   aria-label="no"
+                   #isMobileFalse="ngModel"><label for="isMobileFalse">No</label>
+            <div *ngIf="(createAccountForm.submitted && (userViewModel.isMobile === undefined))"
+                 class="lgn-radio-group-error-msg">
+              Please make a selection.
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="lgn-note-container">
+      <p>
+        <em>Note: If you'd like to have the option to receive text alerts in the future,
+          please provide your mobile number here.</em>
+      </p>
+    </div>
+    <div class="lgn-button-container">
+      <button type="submit" class="lgn-continue-btn btn btn-lg btn-primary">Continue</button>
+    </div>
+  </form>
+
+  <div [config]="{ show: false }" bsModal
+       #helpModal="bs-modal" class="modal fade"
+       tabindex="-1" role="dialog"
+       [attr.aria-label]='"cancel"'
+       aria-label="help modal label"
+       aria-hidden="true">
+    <div class="modal-dialog lgn-modal-sm">
+      <div class="modal-content lgn-position-relative">
+        <div class="modal-header">
+          <button type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  tabindex="0"
+                  aria-hidden="true"
+                  aria-label="close"
+                  (click)="helpModal.hide()">
+            <span class="fa fa-times" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>{{modalMessage}}</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="lgn-close-btn btn btn-lg btn-primary" tabindex="0"
+                  data-dismiss="modal" (click)="helpModal.hide()">CLOSE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

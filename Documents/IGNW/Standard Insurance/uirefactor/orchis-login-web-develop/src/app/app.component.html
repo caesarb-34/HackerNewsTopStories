@@ -1,0 +1,15 @@
+<div class="skipnav" role="navigation" aria-label="navigation">
+  <a (click)="focusOnMainContent()"
+     (keyup.enter)="focusOnMainContent()"
+     tabindex="0" aria-hidden="true">Skip to main content</a>
+  <a (click)="focusOnFooter()"
+     (keyup.enter)="focusOnFooter()"
+     tabindex="0" aria-hidden="true">Skip to footer</a>
+</div>
+
+<sfg-brand-no-auth-header (clickEvent)="handleHeaderClickEvent($event)"></sfg-brand-no-auth-header>
+<main id="main-content" class="container pt-4" tabindex="0">
+  <router-outlet></router-outlet>
+</main>
+<sfg-brand-modal-dialog></sfg-brand-modal-dialog>
+<sfg-brand-footer class="footer"></sfg-brand-footer>

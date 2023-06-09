@@ -1,0 +1,87 @@
+<sfg-brand-idle-timeout></sfg-brand-idle-timeout>
+
+<div tabindex="0" id="mfa-enrollment" class="lgn-center-col col-12 col-sm-10 col-md-6">
+   <form #mfaEnroll="ngForm">
+    <div class="form-group">
+      <h1 *ngIf="mfaAuthenticated">You're now logged in</h1>
+      <h1 *ngIf="mfaEnrollmentStatus">You're all set!</h1>
+      <div class="lgn-mfaenroll-content">
+       <p *ngIf="mfaAuthenticated" aria-hidden="true">
+        If you trust this browser, you won't have to enter a code when you log in from this browser again.
+       </p>
+       <p *ngIf="mfaEnrollmentStatus" aria-hidden="true">
+        Your profile has been updated. You can go to  <a href="{{ MY_INFO_URL }}" class="lgn-btn-forgot-password lgn-btn-underline" tabindex="1">My Information</a> any time to change this information.
+       </p>
+      </div>
+
+      <!-- TRUST BROWSER -->
+      <div class="checkbox checkbox-primary">
+        <input [(ngModel)]="askForBrowser"
+               id="browser-checkbox"
+               name="browser-checkbox"
+               type="checkbox"
+               aria-label="Trust this browser"/>
+        <label for="browser-checkbox">
+          Trust this browser
+        </label>
+
+        <button class="btn lgn-checkbox-help-indicator mb-2"
+                type="button"
+                aria-label="More Information about Trust this browser"
+                (click)="mfaEnrollHelpModal.show()">
+          <span class="fa fa-info-circle"></span>
+        </button>
+
+        <div class="lgn-mfaenroll-note"><p>Do not select this option if you're using a public computer that other people can use.</p></div>
+      </div>
+      <!-- ./TRUST BROWSER -->
+
+	    <div class="checkbox checkbox-primary">
+        <input [(ngModel)]="doNotAskThisBrowserAgain"
+               id="doNotAskAgainCheckbox"
+               name="doNotAskAgainCheckbox"
+               type="checkbox"
+               aria-label="Don't ask this Browser again"/>
+        <label for="doNotAskAgainCheckbox">Don't ask on this browser again.</label>
+      </div>
+
+
+      <!--Add new message here-->
+      <div>
+        <p *ngIf="isMfaAltChannel" aria-hidden="true">
+          If you prefer receiving codes this way, you can go to
+          <a href="{{ MY_INFO_URL }}" class="lgn-btn-forgot-password lgn-btn-underline" tabindex="1">My Information</a> to update your two-step verification setting.
+        </p>
+      </div>
+      <div class="lgn-button-container">
+        <button type="submit" (click)="persistAsTrustedBrowser();" class="btn btn-lg btn-primary lgn-continue-btn">Continue</button>
+      </div>
+    </div>
+   </form>
+ </div>
+ <div [config]="{ show: false }" bsModal
+     #mfaEnrollHelpModal="bs-modal" class="modal fade"
+     tabindex="-1" role="dialog"
+     [attr.aria-label]='"cancel"'
+     aria-label="mfaEnrollHelpModal"
+     aria-hidden="true">
+  <div class="modal-dialog lgn-modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaEnrollHelpModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>If you choose to trust this device, you’ll be allowed to log in from this same browser without having to enter a code.
+          However, if anyone tries to access your account from a different browser, two-step verification will be required.</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" tabindex="0"
+                data-dismiss="modal" (click)="mfaEnrollHelpModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+  </div>
+ </div>

@@ -1,0 +1,45 @@
+#!/bin/bash -e
+brepublish() {
+branchName="$1"
+
+# TODO: We assume but do not currently validate that basic linux utilties are on the path rm, mkdir, curl
+if [[ -z "$BASH" ]]; then
+    echo "This script must be run or sourced using the BASH shell" 1>&2
+    exit 1
+fi
+
+# Calculate path to project and setup work directory relative to this script
+project="$(cd "$(dirname "$BASH_SCRIPT[0]")" && pwd)"
+if [[ "$(basename "$project")" == ".deploy" ]]; then
+    project="$(dirname "$project")"
+fi
+setup="$project/.deploy"
+
+# Variables for deployment
+applicationName="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['artifactId'])")"
+buildVersion="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['version'])")"
+distributionUrl="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['distributionUrl'])")"
+groupId="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['groupId'])")"
+groupPath=$(printf %s "$groupId" | sed -e "s/\./\//g")
+server="$(dirname "$(dirname "$(dirname "$distributionUrl")")")/repository"
+repository=$(basename "$distributionUrl")
+
+# Validate that the required variables have been read from the project and set
+if [[ -z "$groupId" || -z "$applicationName" || -z "$buildVersion" || -z "$distributionUrl" ]]; then
+  echo "Some of the required variables were not available from the project" 1>&2
+  echo "    groupId: $groupId" 1>&2
+  echo "    applicationName $applicationName" 1>&2
+  echo "    buildVersion: $buildVersion" 1>&2
+  echo "    distributionUrl: $distributionUrl" 1>&2
+  exit 1
+fi
+
+# Tell Jenkins to deploy our artifact using xl-deploy
+if [[ "$branchName" =~ $REGEX_DEVELOP || "$branchName" =~ $REGEX_RELEASE || "$branchName" =~ $REGEX_HOTFIX ]]; then
+    # Note this script must _ONLY_ return the list of dar to deploy on standard out
+    echo "Environments/INT/Angular|.deploy/target/${applicationName}-${buildVersion}.dar" 1>&2
+    echo "Environments/INT/Angular|.deploy/target/${applicationName}-${buildVersion}.dar"
+fi
+}
+brepublish "$@"
+unset -f brepublish

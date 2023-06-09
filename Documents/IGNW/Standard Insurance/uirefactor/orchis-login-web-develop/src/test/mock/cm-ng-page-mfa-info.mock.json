@@ -1,0 +1,7 @@
+[
+  {
+    "id": "mfa-info",
+    "title": "How two-step verification works.",
+    "body": "<div class=\"text-center\" style=\"display: flex; flex-wrap: wrap; justify-content: center;\">\r\n<div style=\"padding: 10px; max-width: 200px;\"><img alt=\"Enter password\" src=\"https://cm.standard.com/sites/default/files/computer-login.png\" />\r\n<h3>Enter Your Password</h3>\r\n\r\n<p>Log in to standard.com with your user name and password, as usual.</p>\r\n</div>\r\n\r\n<div style=\"padding: 10px; max-width: 200px;\"><img alt=\"Smart phone\" src=\"https://cm.standard.com/sites/default/files/phone-code.png\" title=\"Smart phone\" />\r\n<h3>Enter a Code</h3>\r\n\r\n<p>Next, you'll enter a code that we send through your preferred method: text, email or phone call.</p>\r\n</div>\r\n\r\n<div style=\"padding: 10px; max-width: 200px;\"><img alt=\"Enter password\" src=\"https://cm.standard.com/sites/default/files/computer-check.png\" />\r\n<h3>Complete Log In</h3>\r\n\r\n<p>That’s it! Once you’ve been verified, you can choose to log in from that device without a code in the future.</p>\r\n</div>\r\n</div>\r\n"
+  }
+]

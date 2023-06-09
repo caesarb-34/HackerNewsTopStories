@@ -1,0 +1,118 @@
+input[type='email'] {
+  margin-bottom: 45px;
+}
+
+.lgn-intro-message {
+  margin-top: 35px;
+  margin-bottom: 35px;
+}
+
+p a {
+  text-decoration: underline;
+}
+
+.lgn-continue-btn {
+  width: 100%;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.lgn-forgot-user {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.lgn-support-btn {
+  padding: 15px 20px;
+}
+
+
+@media screen and (max-width:767px){
+  .lgn-forgot-options a {
+    background-color: #C1DBF9 !important;
+    color: #004EA8;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .lgn-forgot-options a:hover {
+    background-color: #D8E7F8 !important;
+    color: #004EA8;
+    text-decoration: none;
+  }
+
+  .container-fluid {
+    height: 80%;
+  }
+}
+@media screen and (min-width:768px){
+  .lgn-forgot-options a {
+    background-color: #C1DBF9 !important;
+    color: #004EA8;
+    border: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    width: 100%;
+  }
+
+  .lgn-btn-forgot-user {
+    color: #004ea8 !important;
+    margin-right: 5%;
+    letter-spacing: 1px;
+  }
+
+  .lgn-forgot-options a:hover {
+    background-color: #D8E7F8 !important;
+    color: #004EA8 !important;
+    text-decoration: none;
+  }
+
+  .container-fluid {
+    height: 80%;
+  }
+}
+@media screen and (min-width:992px){
+  .lgn-forgot-options a {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-transform: none;
+    margin: auto;
+    width: auto;
+    text-decoration: underline;
+  }
+
+  .lgn-forgot-options a:hover {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-decoration: underline;
+  }
+
+  .lgn-btn-forgot-user {
+    letter-spacing: 0;
+    text-decoration: underline;
+  }
+  .container-fluid {
+    height: 77%;
+  }
+}
+@media screen and (min-width:1200px){
+  .lgn-forgot-options a {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-decoration: underline;
+  }
+
+  .lgn-forgot-options a:hover {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-decoration: underline;
+  }
+}

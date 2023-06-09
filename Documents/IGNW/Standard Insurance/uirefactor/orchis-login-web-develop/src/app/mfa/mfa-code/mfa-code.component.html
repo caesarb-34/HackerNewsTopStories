@@ -1,0 +1,106 @@
+<sfg-brand-idle-timeout></sfg-brand-idle-timeout>
+
+<lgn-message-popup
+  [message]="errorMessages[activeError]"
+  [msgType]="'error'"
+  *ngIf="activeError"
+>
+</lgn-message-popup>
+
+<div class="lgn-center-col col-12 col-sm-10 col-md-6">
+
+  <div *ngIf="isWaiting" class="lgn-spinner-container">
+    <div class="lgn-valign-middle">
+      <span class="fas fa-spinner fa-pulse fa-5x fa-fw"></span>
+      <span class="sr-only" >Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isWaiting">
+    <h1 [innerHTML]="displayPageContent.h1Title"></h1>
+    <p [innerHTML]="displayPageContent.informationText"
+      id="informationText">
+    </p>
+
+    <form class="form-group" (ngSubmit)="onSubmit()" #mfaForm="ngForm">
+      <label *ngIf="displayInputLabel()"
+        id="primarySixDigitOtpCodeLabel"
+        class="help-message"
+        for="sixDigitOtpCode"
+        [innerHtml]="formLabel"
+      ></label>
+      <input
+        id="sixDigitOtpCode"
+        name="sixDigitOtpCode"
+        type="text"
+        required
+        class="form-control"
+        [ngClass]="{'form-focus': focusSixDigitOtpCode}"
+        placeholder="&#xf0c1;  Six-Digit Code"
+        pattern="^\d{6}?$"
+        autocomplete="off"
+        (blur)="focusSixDigitOtpCode = false;"
+        (focus)="focusSixDigitOtpCode = true;"
+        [(ngModel)]="otpInput"
+        #sixDigitOtpCode
+        [attr.aria-labelledby]="'informationText'"
+        [textMask]="{
+          'mask': mask,
+          'guide': false
+        }"
+      />
+
+      <button type="submit"
+              id="btnSubmit"
+              [ngClass]="{'disabled': submitDisabled}"
+              class="lgn-continue-btn btn btn-lg btn-primary"
+              aria-label="continue button">
+        <span *ngIf="submitDisabled">
+          <span class='fas fa-spinner fa-pulse fa-fw'></span>
+        </span>
+        <span *ngIf="!submitDisabled">CONTINUE</span>
+      </button>
+    </form>
+
+    <h4>Having Problems?</h4>
+    <p>
+      <a class="lgn-mouse-pointer lgn-link-primary"
+         (keydown.Enter)="codeResetModal.show(); resendOtpRequest()"
+         (click)="codeResetModal.show(); resendOtpRequest()"
+         tabindex="0">Request a new code</a> or <a target="_blank" [href]="customerSupportUrl">contact us</a> for assistance.
+    </p>
+  </div>
+</div>
+
+<div [config]="{ show: false }" bsModal
+     #codeResetModal="bs-modal" class="modal fade"
+     tabindex="-1" role="dialog"
+     [attr.aria-label]='"cancel"'
+     aria-label="Code Resent Verification"
+     aria-hidden="true">
+  <div class="modal-dialog lgn-modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title pull-left">We sent you a new code.</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="codeResetModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          If you do not receive it, please <a target="_blank" [href]="customerSupportUrl">contact us</a> for help.
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button
+          type="button"
+          class="lgn-close-btn btn btn-lg btn-primary"
+          (click)="codeResetModal.hide()"
+          tabindex="0">
+          CLOSE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

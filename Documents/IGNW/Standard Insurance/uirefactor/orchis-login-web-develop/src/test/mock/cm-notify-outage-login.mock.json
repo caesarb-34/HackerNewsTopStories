@@ -1,0 +1,9 @@
+[
+  {
+    "targetId": "login-message",
+    "targetType": "none",
+    "notificationType": "total-outage",
+    "messageTitle": "none",
+    "message": "<p>This is a total outage message that might come from Drupal.</p>"
+  }
+]

@@ -1,0 +1,394 @@
+.checkbox-primary {
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+.checkbox-primary label {
+  font-weight: bold;
+}
+
+.modal-footer .checkbox-primary {
+  text-align: left;
+  padding: 0 40px;
+}
+
+.lgn-error-message {
+  text-align: left;
+  color: #EF434B;
+  padding: 0 22px;
+  height: 20px;
+}
+
+.lgn-username {
+  margin-bottom: 25px;
+}
+
+.lgn-password {
+  margin-bottom: 15px;
+}
+
+.lgn-btn-forgot-user {
+  cursor: pointer;
+}
+
+.lgn-btn-forgot-password {
+  cursor: pointer;
+}
+
+.lgn-show-password {
+  margin-top: 0;
+  margin-left: 10px;
+  margin-bottom: 25px;
+  display: inline-block;
+  cursor: pointer;
+  padding: 5px 15px;
+  background: none;
+  border: none;
+}
+
+.lgn-modal-lg {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.lgn-modal-sm {
+  padding: 0;
+  width: 400px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.lgn-modal-sm .modal-body {
+  padding: 10px 60px;
+}
+
+.lgn-login-btn {
+  width: 100%;
+}
+
+.lgn-welcome-message {
+  margin-bottom: 35px;
+}
+
+.lgn-continue-btn {
+  padding: 15px 20px;
+}
+
+.lgn-close-btn {
+  letter-spacing: 1px;
+}
+
+.container-fluid {
+  height: 77%;
+}
+
+ul li {
+  font-size: 16px;
+}
+
+ul li a {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+p a {
+   text-decoration: underline;
+}
+
+.lgn-benefit-link li a {
+  font-size: 16px;
+}
+
+.lgn-link {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Important part */
+.modal-dialog{
+    overflow-y: initial !important;
+}
+
+.modal-body{
+    overflow-y: auto;
+}
+
+.lgn-position-relative{
+  position: relative;
+}
+
+.lgn-spinner-container {
+  overflow-y: auto;
+  height: 480px;
+  position: relative;
+}
+
+.lgn-valign-middle {
+  color: #004ea8;
+  position: absolute;
+  top:50%;
+  left:50%;
+
+  transform: translate(-50%,-50%);
+}
+
+@media(max-width:480px) {
+  .modal-header {
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }
+}
+
+@media(max-width:767px){
+  .lgn-forgot-options a {
+    background-color: #C1DBF9 !important;
+    color: #004EA8;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 100%
+  }
+
+  .lgn-forgot-options a:hover {
+    background-color: #D8E7F8 !important;
+    color: #004EA8;
+    text-decoration: none;
+  }
+  .divider {
+    display: none;
+  }
+
+  .container-fluid {
+    height: 80%;
+  }
+
+  .lgn-continue-btn {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 0
+  }
+
+ .lgn-modal-sm {
+    width: 100%;
+  }
+
+  .lgn-modal-lg {
+    width: 100%;
+  }
+
+  .lgn-error-message {
+    height: auto;
+  }
+}
+@media(min-width:768px){
+  .lgn-forgot-options a {
+    background-color: #C1DBF9 !important;
+    color: #004EA8;
+    border: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    width: 45%;
+  }
+  .lgn-btn-forgot-password {
+    color: #004ea8 !important;
+    margin-left: 4%;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+  .lgn-btn-forgot-user {
+    color: #004ea8 !important;
+    margin-right: 5%;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+  .lgn-forgot-options a:hover {
+    background-color: #D8E7F8 !important;
+    color: #004EA8 !important;
+    text-decoration: none;
+  }
+  .divider {
+    display: none;
+  }
+  .container-fluid {
+    height: 80%;
+  }
+  .lgn-continue-btn {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 0
+  }
+}
+@media(min-width:992px){
+  .lgn-forgot-options a {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-transform: none;
+    margin: auto;
+    width: auto;
+    text-decoration: underline;
+  }
+  .lgn-forgot-options a:hover {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-decoration: underline;
+  }
+  .lgn-btn-forgot-password {
+    letter-spacing: 0;
+    text-decoration: underline;
+  }
+  .lgn-btn-forgot-user {
+    letter-spacing: 0;
+    text-decoration: underline;
+  }
+  .divider {
+    display: inline;
+  }
+  .container-fluid {
+    height: 77%;
+  }
+  .lgn-continue-btn {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}
+@media(min-width:1024px){
+  .lgn-continue-btn {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 0
+  }
+}
+@media(min-width:1200px){
+  .lgn-forgot-options a {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-decoration: underline;
+  }
+  .lgn-forgot-options a:hover {
+    background-color: #ffffff !important;
+    border: none;
+    font-size: 16px;
+    text-decoration: underline;
+  }
+  .lgn-continue-btn {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}
+
+/* loading progress indicator */
+
+.progress {
+  position: relative;
+  height: 8px !important;
+  display: block;
+  width: 40%;
+  background-color: #c1c1c1 !important;
+  border-radius: 2px;
+  background-clip: padding-box;
+  margin: 40px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.progress .indeterminate {
+  background-color: #004ea8;
+}
+
+.progress .indeterminate:before {
+  content: '';
+  position: absolute;
+  background-color: inherit;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  will-change: left, right;
+  -webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+  animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+.progress .indeterminate:after {
+  content: '';
+  position: absolute;
+  background-color: inherit;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  will-change: left, right;
+  -webkit-animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  -webkit-animation-delay: 1.15s;
+  animation-delay: 1.15s;
+}
+
+@-webkit-keyframes indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@-webkit-keyframes indeterminate-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+@keyframes indeterminate-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+

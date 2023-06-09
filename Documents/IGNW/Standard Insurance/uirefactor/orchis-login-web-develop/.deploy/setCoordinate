@@ -1,0 +1,50 @@
+#!/bin/bash -e
+bresetcoordinate() {
+coordinate="$1" # xlDeployJenkinsRepository or xlDeployMavenRepository have special meaning
+# Coordinate should be a newline seperated list of:
+# The distributionUrl is the https location of Nexus & the maven coordinates of our source code is set to build.
+# In this example we are only building and deploying a single artifact so we should only be called once
+# Currently all artifacts in a build must have the same version number, in the future this limitation
+# may be removed.
+
+if [[ -z "$BASH_VERSION" ]]; then
+    echo "This script must be run or sourced using the BASH shell" 1>&2
+    exit 1
+fi
+
+# Calculate path to project and setup work directories relative to this script
+project="$(cd "$(dirname "$BASH_SCRIPT[0]")" && pwd)"
+if [[ "$(basename "$project")" == ".deploy" ]]; then
+    project="$(dirname "$project")"
+fi
+
+if [[ -e "$project/package.json" && -n "$coordinate" ]]; then
+    # Extract the required parameters
+    distributionUrl="https://nexus.standard.com:8443/nexus/repository/releases"
+    groupId="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['groupId'])")"
+    artifactId="$(cat "$project/package.json" | python -c "import sys, json; print(json.load(sys.stdin)['com.standard']['artifactId'])")"
+    prefix="${distributionUrl}|${groupId}:${artifactId}:"
+
+    # Validate that the required variables have been read from the project and set
+    if [[ -z "$distributionUrl" || -z "$groupId" || -z "$artifactId" ]]; then
+        echo "Some of the required variables were not available from the project" 1>&2
+        echo "    distributionUrl: $distributionUrl" 1>&2
+        echo "    groupId: $groupId" 1>&2
+        echo "    applicationName $applicationName" 1>&2
+        exit 1
+    fi
+
+    while read -r line; do
+        if [[ "$line" == "$prefix"* ]]; then
+            version="${line#$prefix}"
+            package="$(cat "$project/package.json" | python -c "import collections,json,sys;\
+                tmp=json.load(sys.stdin,object_pairs_hook=collections.OrderedDict);\
+                tmp['version']='$version';\
+                json.dump(tmp,sys.stdout,indent=2,separators=(',',': '))")"
+            echo "$package" > "$project/package.json"
+        fi
+    done <<< "$coordinate"
+fi
+}
+bresetcoordinate "$@"
+unset -f bresetcoordinate

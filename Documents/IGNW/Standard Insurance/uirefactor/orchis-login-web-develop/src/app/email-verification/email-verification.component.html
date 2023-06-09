@@ -1,0 +1,13 @@
+<div tabindex="0" id="verify-email" class="lgn-center-col col-12 col-sm-10 col-md-6">
+  <ng-container *ngIf="responseSuccess; else failureMessage">
+    <h1><p class="fa fa-check" aria-hidden="true"></p> Thank you.</h1>
+    <h3>Your profile information has been updated.</h3>
+    <div class="lgn-button-container">
+      <button (click)="navigateTo('/login')" class="btn btn-lg btn-primary lgn-continue-btn">Continue</button>
+    </div>
+  </ng-container>
+  <ng-template #failureMessage>
+    <h2 [innerHtml]="errorTitle"></h2>
+    <p class="lgn-help-text" [innerHtml]="errorMessage"></p>
+  </ng-template>
+</div>

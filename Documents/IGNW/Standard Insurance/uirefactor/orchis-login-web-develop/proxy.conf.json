@@ -1,0 +1,38 @@
+{
+    "/theme/*": {
+        "target": "https://cm.standard.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/ng-page/*": {
+        "target": "https://cm.standard.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/header-message/*": {
+        "target": "https://cm.standard.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/assets/images/*": {
+        "target": "https://cm.standard.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/api/*": {
+        "target": "https://portalint.standard.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/ui/*": {
+        "target": "https://portalint.standard.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

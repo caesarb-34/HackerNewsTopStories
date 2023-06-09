@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Login | The Standard</title>
+  <base href="/">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="apple-touch-icon" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="57x57" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cm.standard.com/sites/default/files/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" href="https://cm.standard.com/sites/default/files/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cm.standard.com/sites/default/files/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cm.standard.com/sites/default/files/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="https://cm.standard.com/sites/default/files/favicons/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="256x256" href="https://cm.standard.com/sites/default/files/favicons/android-chrome-256x256.png">
+  <link rel="msapplication-TileImage" sizes="144x144" href="https://cm.standard.com/sites/default/files/favicons/mstile-144x144.png">
+  <link rel="msapplication-TileImage" sizes="150x150" href="https://cm.standard.com/sites/default/files/favicons/mstile-150x150.png">
+  <link rel="manifest" href="https://cm.standard.com/sites/default/files/favicons/site.webmanifest">
+  <link rel="mask-icon" href="https://cm.standard.com/sites/default/files/favicons/safari-pinned-tab.svg" color="#004ea8">
+
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="https://cm.standard.com/sites/default/files/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    /* This has to be here for the logo to be in the center*/
+    /* spin progress indicator */
+    .loading-container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+    .loading-area {
+      width: 100% !important;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .loading-area .spinner {
+      height: 200px;
+      width: 200px;
+      animation: rotate 2s linear infinite;
+      transform-origin: center center;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+    .loading-area .spinner .path {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+      animation: dash 1.5s ease-in-out infinite;
+      stroke-linecap: round;
+      stroke: #efefef;
+    }
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes dash {
+      0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
+      }
+      100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <lgn-app-root>
+    <div class="loading-container">
+      <div class="loading-area">
+        <img height="80px" src="https://cm.standard.com/sites/default/files/images/standard-logo.svg" alt="The Standard">
+        <svg class="spinner" viewBox="25 25 50 50">
+          <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+        </svg>
+      </div>
+    </div>
+  </lgn-app-root>
+</body>
+</html>

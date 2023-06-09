@@ -1,0 +1,64 @@
+#!/bin/bash -e
+breinstall () {
+    # TODO: We assume but do not currently validate that basic linux utilties are on the path rm, mkdir, curl
+    if [[ -z "$BASH" ]]; then
+        echo "This script must be run or sourced using the BASH shell" 1>&2
+        exit 1
+    fi
+
+    # Calculate path to project and setup work directory relative to this script
+    project="$(cd "$(dirname "$BASH_SCRIPT[0]")" && pwd)"
+    if [[ "$(basename "$project")" == ".deploy" ]]; then
+        project="$(dirname "$project")"
+    fi
+    setup="$project/.deploy"
+
+    # Get the versions of node and npm needed
+    node_version_needed="$(cat package.json |  python -c "import sys, json; print(json.load(sys.stdin)['engines']['node'])")"
+    npm_version_needed="$(cat package.json |  python -c "import sys, json; print(json.load(sys.stdin)['engines']['npm'])")"
+    if [[ -z "$node_version_needed" || -z "$npm_version_needed" ]]; then
+        echo "Versions not properly defined in package.json" 1>&2
+        exit 1
+    fi
+    node_npm="node-v${node_version_needed}_npm-${npm_version_needed}"
+
+    # Cacluate the correrct binary for node to download
+    if [[ "$(uname -m)" == 'x86_64' ]]; then
+        node_url="https://nexus.standard.com:8443/nexus/repository/node/v${node_version_needed}/node-v${node_version_needed}-linux-x64.tar.gz"
+    else
+        node_url="https://nexus.standard.com:8443/nexus/repository/node/v${node_version_needed}/node-v${node_version_needed}-linux-x86.tar.gz"
+    fi
+
+    if [[ ! -z "$JENKINS_HOME" && -d "$JENKINS_HOME" && -w "$JENKINS_HOME" ]]; then
+       cache="$JENKINS_HOME/tools/bre/angular/$node_npm-cache"
+       tools="$JENKINS_HOME/tools/bre/angular/$node_npm"
+    else
+       cache="$setup/$node_npm-cache"
+       tools="$setup/$node_npm"
+    fi
+
+    if [[ ! -e "$cache" ]]; then
+        mkdir -p "$cache"
+    fi
+
+    if [[ ! -e "$tools" ]]; then
+        mkdir -p "$tools"
+        curl --cacert "$setup/cacerts" --silent --show-error --junk-session-cookies --location "$node_url" > "$setup/node_tmp.tar.gz"
+        contents=$(tar tzf "$setup/node_tmp.tar.gz" | head -1 | sed -e 's/\/.*$//' -e 's/[[:space:]]*$//')
+        if [[ -z "$contents" ]]; then
+            echo Error the node module download is corrupted 1>&2
+            exit 1
+        fi
+        tar Cxzf "$tools" "$setup/node_tmp.tar.gz" --strip-components=1
+        rm -f "$setup/node_tmp.tar.gz"
+        export PATH="$project/node_modules/.bin:$tools/bin:$PATH"
+	export npm_config_cache="$cache"
+        npm -g install "npm@${npm_version_needed}"
+        npm -g install node-gyp
+    fi
+    # Order stable uniqueness path filter to make path adjustments idempotent
+    export PATH=$(printf %s "$project/node_modules/.bin:$tools/bin:$PATH" | awk -v RS=: -- '{p=$0;if(!h[p]++){printf("%s%s",!ln++?"":RS,$0)}}')
+}
+breinstall
+unset -f breinstall
+

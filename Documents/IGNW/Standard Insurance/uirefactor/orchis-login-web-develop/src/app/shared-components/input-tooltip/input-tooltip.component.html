@@ -1,0 +1,11 @@
+<div *ngIf="toolTipActive" class="lgn-input-tooltip">
+  <div class="lgn-tooltip-container" [ngClass]="cssClasses" [style.width.px]="width">
+    <div *ngIf="intro" [innerHtml]="intro"></div>
+    <ul *ngIf="list && list.length > 1">
+      <ng-container *ngFor="let item of list">
+        <li [innerHtml]="item"></li>
+      </ng-container>
+    </ul>
+    <div *ngIf="closing" [innerHtml]="closing"></div>
+  </div>
+</div>

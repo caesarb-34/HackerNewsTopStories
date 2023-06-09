@@ -1,0 +1,191 @@
+<sfg-brand-idle-timeout></sfg-brand-idle-timeout>
+
+<lgn-message-popup
+    [message]="errorMessages[activeError]"
+    [msgType]="'error'"
+    *ngIf="activeError"
+    >
+</lgn-message-popup>
+
+<div class="lgn-center-col col-12 col-sm-10 col-md-6">
+  <div role="complementary" aria-label="Primary">
+    <h1>{{h1Title}}</h1>
+    <p class="lgn-intro-message">Tell us how to reach you in case we detect unusual activity in your account or you forget your password.</p>
+  </div>
+
+
+  <form #collectInfoForm="ngForm" (ngSubmit)="onSubmit(collectInfoForm.valid)">
+    <div class="form-group">
+
+      <div *ngIf="isSFGEmployee" (click)="customerSupportNavModal.show()" [ngClass]="{'lgn-email-display': true, 'lgn-no-link-cursor': isSFGEmployee}">
+        <div class="lgn-strong">{{contactInfo.email}}</div>
+        <div tabindex="0" (keyup.enter)="customerSupportNavModal.show()" class="lgn-no-link-question">&#xf128;</div>
+      </div>
+
+      <div *ngIf="!editEmailDisplay && !isSFGEmployee" (click)="onClickEditEmailDisplay()" class="lgn-email-display">
+        <div class="lgn-strong">{{contactInfo.email}}</div>
+        <div tabindex="0" (keyup.enter)="onClickEditEmailDisplay()" class="lgn-email-display-edit">&#xf040; Edit</div>
+      </div>
+
+      <div *ngIf="editEmailDisplay && !isSFGEmployee">
+        <label *ngIf="
+                 focusEmail
+              && (!emailAddress.control.hasError('pattern') || !emailAddress.touched)
+            "
+            id="emailAddressLabel"
+            class="help-message"
+            for="emailAddress"
+            >&#xf0e0; Email Address
+        </label>
+
+        <div *ngIf="collectInfoForm.submitted && !focusEmail && emailAddress.errors" class="error-message">
+          <span *ngIf="emailAddress.hasError('required')">
+            Email Address is required.
+          </span>
+          <span *ngIf="!emailAddress.hasError('required') && emailAddress.hasError('validEmailRequired')">
+            Please enter a valid email address.
+          </span>
+        </div>
+
+        <input
+          id="emailAddress"
+          name="emailAddress"
+          type="email"
+          class="form-control"
+          #emailAddress="ngModel"
+          [(ngModel)]="contactInfo.email"
+          [ngClass]="{
+            'form-focus': focusEmail,
+            'form-error': ((userAttemptedToSubmit && emailAddress.invalid && !focusEmail) || (emailAddress.control.hasError('pattern')))
+                       && emailAddress.touched
+          }"
+          (blur)="focusEmail = false"
+          (focus)="focusEmail = true;"
+          placeholder="&#xf0e0;  Email Address"
+          [attr.aria-label]="'email address'"
+          autocomplete="email"
+          required
+          lgnValidateEmail
+        />
+      </div>
+
+      <div *ngIf="!editPhoneDisplay" (click)="onClickEditPhoneDisplay()" class="lgn-email-display">
+        <div class="lgn-strong">{{contactInfo.phone}}</div>
+        <div tabindex="0" (keyup.enter)="onClickEditPhoneDisplay()" class="lgn-email-display-edit">&#xf040; Edit</div>
+      </div>
+
+      <div *ngIf="editPhoneDisplay">
+        <label *ngIf="(focusPrimaryPhone || primaryPhone.valid)
+                   && (!primaryPhone.control.hasError('pattern') || !primaryPhone.touched)"
+            id="primaryPhoneLabel"
+            class="help-message"
+            for="primaryPhone"
+            >&#xf095; Phone
+        </label>
+        <div *ngIf="(userAttemptedToSubmit && primaryPhone.invalid && !focusPrimaryPhone)"
+            class="error-message">
+          Phone is required.
+        </div>
+        <div *ngIf="primaryPhone.errors
+                 && primaryPhone.dirty
+                 && primaryPhone.control.hasError('pattern')
+                 && primaryPhone.touched"
+             class="error-message">
+          Phone number format is incorrect.
+        </div>
+        <input
+          id="primaryPhone"
+          name="primaryPhone"
+          type="tel"
+          class="form-control"
+          placeholder="&#xf095;  Phone"
+          #primaryPhone="ngModel"
+          [(ngModel)]="contactInfo.phone"
+          [ngClass]="{
+            'form-focus': focusPrimaryPhone,
+            'form-error': ((userAttemptedToSubmit && primaryPhone.invalid && !focusPrimaryPhone) || (primaryPhone.control.hasError('pattern')))
+                       && (primaryPhone.touched || userAttemptedToSubmit)
+          }"
+          (blur)="focusPrimaryPhone = false"
+          (focus)="focusPrimaryPhone = true;"
+          [attr.aria-label]="'Primary Phone'"
+          pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
+          required
+          [textMask]="{
+            'mask': mask,
+            'guide': false
+            }"
+          autocomplete="tel"
+        />
+      </div>
+
+    </div>
+
+    <div role="radiogroup" aria-label="Is this is a mobile phone?" class="lgn-question-container lgn-standard-blue-radio">
+      <div class="col-12 col-sm-6 lgn-radio-group-label">
+        <label class="lgn-question" id="isMobilePhone">Is this is a mobile phone?</label>
+      </div>
+      <div class="col-12 col-sm-6">
+        <input
+          id="isMobilePhoneTrue"
+          type="radio"
+          name="optIsMobile"
+          aria-labelledby="isMobilePhone"
+          [(ngModel)]="contactInfo.isMobile"
+          [value]="true">
+        <label for="isMobilePhoneTrue">Yes</label>
+        <input
+          id="isMobilePhoneFalse"
+          type="radio"
+          name="optIsMobile"
+          aria-labelledby="isMobilePhone"
+          [(ngModel)]="contactInfo.isMobile"
+          [value]="false">
+        <label for="isMobilePhoneFalse">No</label>
+        <div class="lgn-input-error" *ngIf="userAttemptedToSubmit && contactInfo.isMobile === undefined">Please make a selection.</div>
+      </div>
+      <div class="lgn-note-container">
+        <p>
+          Note: If you'd like to have the option to receive text alerts in the future,
+          please provide your mobile number here.</p>
+      </div>
+    </div>
+
+    <button type="submit"
+            id="btnSubmit"
+            class="lgn-continue-btn btn btn-lg btn-primary"
+            aria-label="continue button">NEXT</button>
+
+  </form>
+</div>
+
+<div [config]="{ show: false }" bsModal
+     #customerSupportNavModal="bs-modal" class="modal fade"
+     tabindex="-1" role="dialog"
+     [attr.aria-label]='"cancel"'
+     aria-label="mySmallModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog lgn-modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="customerSupportNavModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Your standard.com email address cannot be changed on this account. Please contact your system administrator if you need assistance.
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button"
+                class="lgn-continue-btn btn btn-lg btn-primary"
+                (click)="customerSupportNavModal.hide()"
+                tabindex="0">
+          CLOSE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+[
+  {
+    "logoImageUrl": "https://cm.standard.com/sites/default/files/images/standard-logo.svg",
+    "logoImageClickUrl" : "/",
+    "contactUsLinkLabel": "Contact Us",
+    "contactUsType": "route",
+    "contactUsUrl": "/pages/contact-us",
+    "contactUsTarget": "_self",
+    "footerLeft": "<span>&copy; 2020 StanCorp Financial Group, Inc.</span>",
+    "footerCenter": "Protect your data and identity.",
+    "footerRight": "<a target='_blank' href='https://www.standard.com/legal-privacy'>Legal & Privacy</a>"
+  }
+]

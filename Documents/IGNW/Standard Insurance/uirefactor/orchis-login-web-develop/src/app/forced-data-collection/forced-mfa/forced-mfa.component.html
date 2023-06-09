@@ -1,0 +1,204 @@
+<sfg-brand-idle-timeout></sfg-brand-idle-timeout>
+
+<lgn-message-popup
+  [message]="errorMessages[activeError]"
+  [msgType]="'error'"
+  *ngIf="activeError"
+>
+</lgn-message-popup>
+<div class="lgn-center-col col-12 col-sm-10 col-md-6">
+  <h1>Add an extra layer of security.</h1>
+  <!-- Content -->
+  <p>Two-step verification can help protect your account even if someone else knows your password. In addition to your
+    user name and password, you'll be asked to enter a code that we send to you.</p>
+  <p>Once you've securely logged in, you'll have the option to log in from the same browser without a code in the future.
+    However, if anyone tries to access your account from a <em>different</em> browser, two-step verification will
+    be required.</p>
+
+  <!-- Mfa-info Modal button -->
+  <a type="button" class="lgn-link lgn-link-primary" (click)="showModal('mfaInfoModal')">Tell me more about two-step verification</a>
+  <!-- Form -->
+  <h3>How do you want to receive codes?</h3>
+  <div *ngIf="!identifiers && !activeError" class="lgn-spinner-container">
+    <div class="lgn-valign-middle">
+      <span class="fas fa-spinner fa-pulse fa-5x fa-fw"></span>
+      <span class="sr-only" >Loading...</span>
+    </div>
+  </div>
+  <ng-container *ngIf="identifiers">
+    <p class="error-message">{{inputNotSelectedError}}</p>
+    <form #mfaForm="ngForm" (ngSubmit)="onSubmit()">
+      <div role="radiogroup" class="lgn-question-container lgn-standard-blue-radio" aria-label="Two Step Verification Choices">
+
+        <!-- MOBILE -->
+        <div class="row">
+          <div class="col-12 col-sm-5">
+            <input
+              id="defaultMobile"
+              type="radio"
+              name="mfaFormInput"
+              [ngClass]="{'lgn-mfa-opacity': !isMfaRadioInputEnabled.mobiles}"
+              (click)="collectedInputValue = 'M'"
+              [disabled]="!isMfaRadioInputEnabled.mobiles"
+            />
+            <label for="defaultMobile" [ngClass]="{'lgn-mfa-opacity': !isMfaRadioInputEnabled.mobiles }">Get a text message</label>
+          </div>
+          <div class="col-12 col-sm-7">
+            <p
+              [ngClass]="isMfaRadioInputEnabled.mobiles ? 'lgn-bold' : 'lgn-mfa-italic lgn-mfa-opacity'">
+              {{ defaultMobile?.masked }}
+            </p>
+            <p *ngIf="isMfaRadioInputEnabled.mobiles && collectedInputValue === 'M'" class="lgn-sub-text">Message and data rates may apply.</p>
+          </div>
+        </div>
+        <!-- /MOBILE -->
+
+        <!-- EMAIL -->
+        <div class="row">
+          <div class="col-12 col-sm-5">
+            <input
+              id="defaultEmail"
+              type="radio"
+              name="mfaFormInput"
+              [ngClass]="{'lgn-mfa-opacity': !isMfaRadioInputEnabled.emails}"
+              (click)="collectedInputValue = 'E'"
+              [disabled]="!isMfaRadioInputEnabled.emails"
+            />
+            <label for="defaultEmail" [ngClass]="{'lgn-mfa-opacity': !isMfaRadioInputEnabled.emails }">Get an email</label>
+          </div>
+          <div class="col-12 col-sm-7">
+            <p
+              [ngClass]="isMfaRadioInputEnabled.emails ? 'lgn-bold' : 'lgn-mfa-italic lgn-mfa-opacity'">
+              {{ defaultEmail?.masked }}
+            </p>
+          </div>
+        </div>
+        <!-- /EMAIL -->
+
+        <!-- PHONE -->
+        <div class="row">
+          <div class="col-12 col-sm-5">
+            <input
+              id="defaultPhone"
+              type="radio"
+              name="mfaFormInput"
+              [ngClass]="{'lgn-mfa-opacity': !isMfaRadioInputEnabled.phones}"
+              (click)="collectedInputValue = 'V'"
+              [disabled]="!isMfaRadioInputEnabled.phones"
+            />
+            <label for="defaultPhone" [ngClass]="{'lgn-mfa-opacity': !isMfaRadioInputEnabled.phones}">Get a phone call</label>
+          </div>
+          <div class="col-12 col-sm-7">
+            <p
+              [ngClass]="isMfaRadioInputEnabled.phones ? 'lgn-bold' : 'lgn-mfa-italic lgn-mfa-opacity'">
+              {{ defaultPhone?.masked }}
+            </p>
+            <p *ngIf="isMfaRadioInputEnabled.phones && collectedInputValue === 'V'" class="lgn-sub-text">Message and data rates may apply.</p>
+          </div>
+        </div>
+        <!-- PHONE -->
+      </div>
+      <div class="lgn-button-container">
+        <button
+          type="submit"
+          class="lgn-continue-btn btn btn-lg btn-primary"
+        >Continue</button>
+      </div>
+    </form>
+
+    <div class="lgn-button-container text-center">
+      <!-- Mfa Do I have To Do This Now? Modal button -->
+      <a type="button" class="lgn-link lgn-link-primary" (click)="showModal('mfaDoIHaveToModal')">Do I need to do this now?</a>
+    </div>
+
+  </ng-container>
+</div>
+
+<!-- Mfa-info Modal mfa-info -->
+<div [config]="{ show: false }"
+     bsModal
+     #mfaInfoModal="bs-modal"
+     tabindex="-1"
+     role="dialog"
+     class="modal fade lgn-mfainfo-modal"
+     aria-label="mfaInfo"
+     aria-hidden="true">
+
+  <div class="modal-dialog modal-lg lgn-modal-md">
+    <div class="modal-content" *ngIf="!mfaInfoModalError">
+      <div class="modal-header">
+        <h2 *ngIf="mfaInfoModalContent" class="modal-title pull-left" aria-hidden="true">{{ mfaInfoModalContent?.title }}</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaInfoModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" [innerHtml]="mfaInfoModalContent?.body"></div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaInfoModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+    <div class=modal-content *ngIf="mfaInfoModalError">
+      <div class="modal-header">
+        <h2 class="modal-title pull-left">How two-step verification works.</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaInfoModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" [innerHtml]="errorMessages['408']"></div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaInfoModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Mfa Do I have To Do This Now?  mfa-why-now -->
+<div [config]="{ show: false }"
+     bsModal
+     #mfaDoIHaveToModal="bs-modal"
+     tabindex="-1"
+     role="dialog"
+     class="modal fade lgn-mfainfo-modal"
+     aria-label="mfaInfo"
+     aria-hidden="true">
+
+  <div class="modal-dialog modal-lg lgn-modal-md">
+    <div class="modal-content" *ngIf="!mfaDoIHaveToModalError">
+      <div class="modal-header">
+        <h2 *ngIf="mfaDoIHaveToModalContent" class="modal-title pull-left">{{ mfaDoIHaveToModalContent?.title }}</h2>
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaDoIHaveToModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" [innerHtml]="mfaDoIHaveToModalContent?.body">
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaDoIHaveToModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+    <div class=modal-content *ngIf="mfaDoIHaveToModalError">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaDoIHaveToModal.hide()">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" [innerHtml]="errorMessages['408']"></div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="lgn-close-btn btn btn-lg btn-primary" data-dismiss="modal" tabindex="0"
+                aria-hidden="true" (click)="mfaDoIHaveToModal.hide()">CLOSE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

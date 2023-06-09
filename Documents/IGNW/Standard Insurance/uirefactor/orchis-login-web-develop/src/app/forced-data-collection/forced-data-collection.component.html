@@ -1,0 +1,16 @@
+<sfg-brand-idle-timeout></sfg-brand-idle-timeout>
+
+<div class="lgn-center-col col-12 col-sm-10 col-md-6">
+  <h1>Your security is important to us.</h1>
+  <p>Take a few minutes to ensure your account is secure by:</p>
+  <ul class="lgn-step-list">
+    <li *ngIf="needsPasswordReset">Setting a new password</li>
+    <li *ngIf="needsContactInfoReset">Providing account recovery options</li>
+    <li *ngIf="needsTwoFactorAuthentication">Enrolling in two-step verification</li>
+  </ul>
+
+  <button class="btn btn-lg btn-primary"
+          [routerLink]="stepIndicatorService.getSteps()[0]?.route" [queryParams]="{step: 1}">
+    CONTINUE
+  </button>
+</div>

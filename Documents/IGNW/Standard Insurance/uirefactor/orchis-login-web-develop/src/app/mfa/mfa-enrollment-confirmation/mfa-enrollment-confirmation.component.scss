@@ -1,0 +1,139 @@
+.lgn-button-container {
+  width: 100%;
+  text-align: center;
+  margin-top: 25px;
+}
+
+.lgn-continue-btn {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: 100%;
+  font-size: 16px;
+}
+
+.checkbox-primary {
+  margin-top: 30px;
+  margin-bottom: 25px;
+}
+
+.checkbox-secondary {
+  padding-left:40px;
+}
+
+.checkbox label{
+    font-size: 16px;
+}
+
+.lgn-mfaenroll-content {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.lgn-mfaenroll-note {
+  font-size: 16px;
+  font-style: italic !important;
+}
+
+.lgn-checkbox-help-indicator {
+  font-size: 16px;
+  color: #54B948;
+  cursor: pointer;
+  padding-top: 0;
+}
+
+.lgn-checkbox-help-indicator:focus{
+  border: 1px solid #80bdff;
+  -webkit-box-shadow: 0 0 0 0 rgba(128,189,255,1);
+  -moz-box-shadow: 0 0 0 0 rgba(128,189,255,1);
+  box-shadow: 0 0 0 0 rgba(128,189,255,1);
+}
+
+.lgn-modal-sm {
+    width: 100%;
+}
+
+.lgn-modal-lg {
+    width: 100%;
+}
+
+.modal-dialog{
+    overflow-y: initial !important;
+}
+
+.modal-body{
+    overflow-y: auto;
+}
+
+.lgn-modal-lg {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.lgn-modal-sm {
+  padding: 0;
+  width: 400px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.lgn-modal-sm .modal-body {
+  padding: 10px 60px;
+}
+
+@media(max-width:480px) {
+  .modal-header {
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+
+  .lgn-modal-sm {
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 70px;
+    width: 100%;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }  
+}
+
+@media screen and (min-width: 768px) {
+  .modal:before {
+    vertical-align: top;
+  }
+}
+
+@media(min-width:481px){
+    .lgn-modal-sm {
+      padding: 0;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 70px;
+      width: 50%;
+    }
+}
+
+@media(min-width:768px){
+    .lgn-modal-sm {
+      padding: 0;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 128px;
+      width: 45%;
+    }
+}
+
+@media(min-width:960px){
+  /* styles for browsers larger than 960px; */
+    .lgn-modal-sm {
+      padding: 0;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 128px;
+      width: 450px;
+    }
+}

@@ -1,0 +1,31 @@
+
+<h3 role="contentinfo">Check your email.</h3>
+<p>Your account has been created, but is not yet active. Please activate your online account by clicking 
+  the link in the email we just sent to you.</p>
+<div class="lgn-next-steps">
+  <h4>Next Steps</h4>
+  <ul class="lgn-master-list">
+    <li class="lgn-list-heading"><span aria-label="envelope icon" class="fa fa-envelope fa-fw"></span> Check your inbox.</li>
+    <li><p>You should receive an email within a few minutes.</p></li>
+    <li class="lgn-list-heading"><span aria-label="clock icon" class="fa fa-clock fa-fw"></span> Click the link.</li>
+    <li><p>Use the link in that email within 24 hours, before it expires.</p></li>
+    <li class="lgn-list-heading"><span aria-label="clock icon" class="fa fa-lock fa-fw"></span> Log in.</li>
+    <li><p>Return to the <a [href]="loginUrl">Log In page</a> to log in for the first time to provide a few more details to complete your account setup.</p></li>
+  </ul>
+</div>
+<div class="lgn-email-problems">
+  <h4>Having Problems?</h4>
+  <p>If you do not see the email within a few minutes, check your spam or junk folder. 
+      If it’s not there, you can
+    <lgn-resend-activation
+        class="lgn-link-primary"
+        [identifier]="identifier"
+        [destination]="destination"
+        [linkLabel]="'request a new link'"
+        [showLink]="true"
+        tabindex="0"></lgn-resend-activation>
+      or <a target="_blank"
+            [href]="customerSupportUrl"
+            class="lgn-link-primary">contact us</a> for help.
+  </p>
+</div>

@@ -1,0 +1,77 @@
+<sfg-brand-idle-timeout></sfg-brand-idle-timeout>
+
+<lgn-message-popup
+  [message]="errorMessages[activeError]"
+  [msgType]="'error'"
+  *ngIf="activeError"
+>
+</lgn-message-popup>
+
+<div class="lgn-center-col col-12 col-sm-10 col-md-8 col-lg-6">
+  <h1>Help us verify it’s really you.</h1>
+
+  <div *ngIf="!viewModel" class="lgn-spinner-container">
+    <div class="lgn-valign-middle">
+      <span class="fas fa-spinner, fa-pulse fa-5x fa-fw"></span>
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+
+  <ng-container *ngIf="viewModel">
+
+    <p>For your security, we require a six-digit login code when anyone logs in to your account
+      from an untrusted browser or device.</p>
+    <p>We'll send your code by</p>
+    <p id="default-otp-channel" class="lgn-otp-channel-bold">
+      {{displayLabels[viewModel?.preferredChannel?.type]}}{{viewModel?.preferredChannel?.masked}}
+    </p>
+
+    <form #otpDeliveryChannelForm="ngForm" (ngSubmit)="onSubmit()">
+
+      <!--
+        The reason we test for length being > 1 (and not > 0) is this:
+        the preferred channel will always be added to alt channel to allow user to switch back to preferred
+        after they clicked another alt channel radio button.
+        Therefore, the real test "are there any alt channels" would be length > 1 excluding the preferred.
+      -->
+      <div *ngIf="viewModel.altChannels && viewModel.altChannels.length > 1"
+           class="lgn-channels-container"
+           aria-labelledby="channelList"
+           role="radiogroup">
+          <span class="lgn-option-view-toggle-button"
+               tabindex="0"
+               (keypress)="showChannelList = !showChannelList"
+               (click)="showChannelList = !showChannelList">
+            <a id="channelList" tabindex="-1" class="lgn-options-header lgn-link-primary">Need to receive your code a different way?</a>
+            <span class="glyphicon glyphicon-chevron-{{!showChannelList ? 'right' : 'down'}}"></span>
+          </span>
+          <div class="lgn-options-body" *ngIf="showChannelList">
+            <p>Send code by:</p>
+            <div class="lgn-otp-channel-option" *ngFor="let channel of viewModel.altChannels">
+              <input id="{{channel.key}}-{{channel.type}}"
+                    type="radio"
+                    id="altOtpDeliveryChannel"
+                    name="altOtpDeliveryChannel"
+                    [value]="channel"
+                    tabindex="0"
+                     [(ngModel)]="viewModel.selectedChannel"
+                    require />
+              <label class="lgn-otp-channel-bold" for="{{channel.key}}-{{channel.type}}">
+                {{ displayLabels[channel?.type] }}{{ channel?.masked }}
+              </label>
+            </div>
+          </div>
+      </div>
+
+      <div *ngIf="!activeError" class="lgn-button-container">
+        <button type="submit"
+                id="btnSubmit"
+                class="lgn-continue-btn btn btn-lg btn-primary"
+                aria-label="send code now button"
+        >SEND CODE NOW</button>
+      </div>
+    </form>
+  </ng-container>
+
+</div>

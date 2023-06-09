@@ -1,0 +1,22 @@
+<div class="lgn-center-col col-12 col-sm-10 col-md-6">
+  <h1>Set a New Password</h1>
+  <lgn-step-indicator [selectedStep]="2" [steps]="steps"></lgn-step-indicator>
+  <h3>Check your email.</h3>
+  <h4>If your entries match our records, we'll send instructions to the email address on file.</h4>
+
+  <div class="lgn-next-steps">
+    <h4>Next Steps</h4>
+    <ul class="lgn-master-list">
+      <li class="lgn-list-heading"><span class="fa fa-envelope"></span> Check your inbox.</li>
+        <p>You should receive an email within a few minutes.</p>
+      <li class="lgn-list-heading"><span class="fa fa-clock"></span> Click the link.</li>
+        <p>Use the link in that email within 60 minutes, before it expires.</p>
+    </ul>
+  </div>
+
+  <div class="lgn-email-problems">
+    <h4>If You Didn't Receive the Email</h4>
+    <p>Check your spam or junk folder or <a routerLink="/forgot-password">try again.</a> If you still
+    need help, please <a [href]="customerSupportUrl">contact us</a> for assistance.</p>
+  </div>
+</div>
